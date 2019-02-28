@@ -1,0 +1,14 @@
+{
+    "name": "MikaTurin/Tools",
+    "description": "Reads IP address pool from nic.lv",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*",
+    },
+    "autoload": {
+        "psr-4": {
+            "MikaTurin\\LatvianIpPool\\": "src/"
+        }
+    }
+}
