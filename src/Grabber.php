@@ -1,6 +1,7 @@
 <?php
 namespace MikaTurin\LatvianIpPool;
 
+
 class Grabber
 {
     const URL = 'https://www.nic.lv/local.net';
@@ -14,26 +15,41 @@ class Grabber
 
     }
 
-    public function process()
+    public function get()
     {
-        $ips = [];
-        if ($file = fopen($source, 'rb')) {
-            while (!feof($file)) {
-                $line = trim(fgets($file));
+        return $this->parse($this->read(self::URL));
+    }
+
+    public function parse($s)
+    {
+        $ips = array();
+        $r = preg_split("/\r\n|\n|\r/", $s);
+        unset($s);
+
+        if (empty($r)) {
+            throw new FailureException('result array is empty');
+        }
+
+        foreach ($r as $line) {
+                $line = trim($line);
                 if (empty($line) || 0 === strpos($line, '#')) {
                     continue;
                 }
                 $ips[] = $line;
-            }
-            fclose($file);
         }
+        
+        unset($r);
         $ips = array_unique($ips);
+
+
         if (empty($ips)) {
-            die("# failed to get ip list\n");
+            throw new FailureException('no ip found in result array');
         }
+
+        return $ips;
     }
 
-    public function read($url)
+    protected function read($url)
     {
         $ch = curl_init($url);
 
@@ -44,6 +60,10 @@ class Grabber
 
         $s = curl_exec($ch);
         curl_close($ch);
+        
+        if (empty($s)) {
+            throw new FailureException('http answer is empty');
+        }
 
         return $s;
     }
