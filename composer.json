@@ -1,5 +1,5 @@
 {
-    "name": "MikaTurin/Tools",
+    "name": "MikaTurin/LatvianIpPool",
     "description": "Reads IP address pool from nic.lv",
     "license": "MIT",
     "require": {
